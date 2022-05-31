@@ -29,7 +29,7 @@ func (b *box) AddShape(shape Shape) error {
 // GetByIndex allows getting shape by index
 // whether shape by index doesn't exist or index went out of the range, then it returns an error
 func (b *box) GetByIndex(i int) (Shape, error) {
-	if i >= len(b.shapes) {
+	if i < len(b.shapes) {
 		return b.shapes[i], nil
 	} else {
 		return nil, fmt.Errorf("there is no such element with index %d", i)
@@ -83,15 +83,19 @@ func (b *box) SumArea() float64 {
 // RemoveAllCircles removes all circles in the list
 // whether circles are not exist in the list, then returns an error
 func (b *box) RemoveAllCircles() error {
-	var hasCircle bool
-	for index, shape := range b.shapes {
-		if _, isCircle := shape.(Circle); isCircle {
-			hasCircle = true
-			b.removeByIndex(index)
+	circles := make([]int, 0, len(b.shapes))
+	for index := range b.shapes {
+		reverseIndex := len(b.shapes) - index - 1
+		shape := b.shapes[reverseIndex]
+		if _, isCircle := shape.(*Circle); isCircle {
+			circles = append(circles, reverseIndex)
 		}
 	}
-	if !hasCircle {
+	if len(circles) == 0 {
 		return fmt.Errorf("there are no circles")
+	}
+	for _, circleIndex := range circles {
+		b.removeByIndex(circleIndex)
 	}
 	return nil
 }

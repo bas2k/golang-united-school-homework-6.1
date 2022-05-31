@@ -8,9 +8,9 @@ type Circle struct {
 }
 
 func (c Circle) CalcPerimeter() float64 {
-	return math.Pi * math.Pow(c.Radius, 2)
+	return math.Pi * 2 * c.Radius
 }
 
 func (c Circle) CalcArea() float64 {
-	return math.Pi * 2 * c.Radius
+	return math.Pi * math.Pow(c.Radius, 2)
 }
